@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 var cors = require('cors')
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 
@@ -22,7 +23,6 @@ async function run() {
         const inventoryCollection = client.db("homeReserve").collection("inventories");
 
         //get all data
-        //http://localhost:5000/inventory
         app.get('/inventory', async (req, res) => {
             const query = req.body;
             const cursor = inventoryCollection.find(query);
@@ -31,9 +31,20 @@ async function run() {
         })
 
         //get a single data
+        app.get('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await inventoryCollection.findOne(query);
+            res.send(result);
+        })
 
-
-
+        //delete a data
+        app.delete('/inventory/id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await inventoryCollection.deleteOne(query);
+            res.send(result);
+        })
         // post data
 
 
