@@ -21,6 +21,7 @@ async function run() {
         await client.connect();
         const inventoryCollection = client.db("homeReserve").collection("inventories");
 
+
         //get all data
         app.get('/inventory', async (req, res) => {
             const query = req.body;
@@ -34,6 +35,13 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await inventoryCollection.findOne(query);
+            res.send(result);
+        })
+
+        //post data
+        app.post('/inventory', async (req, res) => {
+            const data = req.body;
+            const result = await inventoryCollection.insertOne(data);
             res.send(result);
         })
 
