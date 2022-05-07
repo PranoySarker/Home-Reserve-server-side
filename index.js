@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
 var cors = require('cors')
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const ObjectId = require('mongodb').ObjectId;
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 
@@ -38,6 +37,21 @@ async function run() {
             res.send(result);
         })
 
+        //update data
+        app.put('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedQuantity = Number(req.body.quantity);
+            const query = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    quantity: updatedQuantity
+                },
+            };
+            const result = await inventoryCollection.updateOne(query, updateDoc, options);
+            res.send(result);
+        })
+
         //delete a data
         app.delete('/inventory/:id', async (req, res) => {
             const id = req.params.id;
@@ -45,7 +59,8 @@ async function run() {
             const result = await inventoryCollection.deleteOne(query);
             res.send(result);
         })
-        //  post data
+
+
 
 
         console.log('connected to the database');
