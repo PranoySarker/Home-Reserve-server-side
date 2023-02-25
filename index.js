@@ -148,6 +148,10 @@ async function run() {
 
 run().catch(console.dir);
 
+app.get('/pranoy', (req, res) => {
+  res.send('my name');
+});
+
 app.listen(port, (req, res) => {
   console.log('listening the port', port);
 });
